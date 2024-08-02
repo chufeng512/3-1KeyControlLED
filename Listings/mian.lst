@@ -1,0 +1,58 @@
+C51 COMPILER V9.60.7.0   MIAN                                                              08/02/2024 09:01:50 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MIAN
+OBJECT MODULE PLACED IN .\Objects\mian.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE mian.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\mian.l
+                    -st) TABS(2) OBJECT(.\Objects\mian.obj)
+
+line level    source
+
+   1          #include <STC89C5xRC.H>
+   2          #define SW1 P42
+   3          
+   4          //需求：独立按键SW1控制P00LED灯的亮灭
+   5          //手册信息：按键按下去时，对应引脚会直接接地，引脚电平为0
+   6          //松开后，引脚电平为1
+   7          //注意点：按键抖动，由于按键的物理特性，存在一个10ms左右的“抖动”
+   8          
+   9          //延时函数
+  10          void Delay10ms()                //@11.0592MHz
+  11          {
+  12   1              unsigned char i, j;
+  13   1      
+  14   1              i = 108;
+  15   1              j = 145;
+  16   1              do
+  17   1              {
+  18   2                      while (--j);
+  19   2              } while (--i);
+  20   1      }
+  21          
+  22          void main()
+  23          {
+  24   1              while(1)
+  25   1              {
+  26   2                      if(SW1 == 0)                         //按下按键
+  27   2                      {
+  28   3                              Delay10ms();                 //消除抖动
+  29   3                              while(SW1 == 0);             //按下按键并保持
+  30   3                              Delay10ms();                 //松开前消除抖动
+  31   3                              P00 = ~P00;                  //0000 0001 -> 1111 1110
+  32   3                      }
+  33   2              }
+  34   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     25    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
